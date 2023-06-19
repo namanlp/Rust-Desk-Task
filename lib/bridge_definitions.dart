@@ -13,11 +13,7 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kPlatformConstMeta;
 
-  Future<String> helloWorld({dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kHelloWorldConstMeta;
-
-  Future<String> returnLsOutput({dynamic hint});
+  Future<List<String>> returnLsOutput({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kReturnLsOutputConstMeta;
 

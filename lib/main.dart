@@ -53,13 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 // if we got our data
               } else if (snapshot.hasData) {
                 // Extracting data from snapshot object
-                final data = snapshot.data as String;
-                return Center(
-                  child: Text(
-                    '$data',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                );
+                final data = snapshot.data as List<String>;
+                return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                          title: Text(data[index], style: TextStyle(color:(index % 2 == 0) ? Colors.black : Colors.blue, fontSize: 17))
+                        );
+                    });
               }
             }
 

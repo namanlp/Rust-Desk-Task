@@ -52,13 +52,9 @@ pub fn platform() -> Platform {
     }
 }
 
-pub fn hello_world() -> String{
-    return String::from("Hello");
-}
-
 use std::process::Command;
 
-pub fn return_ls_output() -> String{
+pub fn return_ls_output() -> Vec<String>{
 
     // First, we will try for ls -la /root/ without any extra permission, for in case,
     // the app is already running with root user privileges
@@ -70,16 +66,25 @@ pub fn return_ls_output() -> String{
             .output()
             .unwrap();
     if output.status.success() {
-        let mut result = String::new();
+        let mut result = Vec::new();
+        let mut temporary_string = String::new();
+
         for i in output.stdout {
-            result.push(i as char)
+            // If i is newline character
+            // We simply push current string to result
+            if i == 10 {
+                result.push(temporary_string.clone());
+                temporary_string = String::new();
+            }else {
+                temporary_string.push(i as char);
+            }
         }
         return result;
     }
 
 
     // Now, let us try with polkit or pkexec
-    
+
     let output =
         Command::new("pkexec")
             .arg("ls")
@@ -88,17 +93,24 @@ pub fn return_ls_output() -> String{
             .output()
             .unwrap();
     if output.status.success() {
-        let mut result = String::new();
+        let mut result = Vec::new();
+        let mut temporary_string = String::new();
+
         for i in output.stdout {
-            result.push(i as char)
+            // If i is newline character
+            // We simply push current string to result
+            if i == 10 {
+                result.push(temporary_string.clone());
+                temporary_string = String::new();
+            }else {
+                temporary_string.push(i as char);
+            }
         }
         return result;
     }
-
     // If neither of options worked, we display message
-    return String::from("Sorry, you must either open this app as root or enable polkit / pkexec");
+    return vec![String::from("Sorry, you must either open this app as root or enable polkit / pkexec")];
 }
-
 
 // The convention for Rust identifiers is the snake_case,
 // and they are automatically converted to camelCase on the Dart side.

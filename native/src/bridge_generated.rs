@@ -31,16 +31,6 @@ fn wire_platform_impl(port_: MessagePort) {
         move || move |task_callback| Ok(platform()),
     )
 }
-fn wire_hello_world_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "hello_world",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || move |task_callback| Ok(hello_world()),
-    )
-}
 fn wire_return_ls_output_impl(port_: MessagePort) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {

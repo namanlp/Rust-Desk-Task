@@ -42,26 +42,10 @@ class NativeImpl implements Native {
         argNames: [],
       );
 
-  Future<String> helloWorld({dynamic hint}) {
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_hello_world(port_),
-      parseSuccessData: _wire2api_String,
-      constMeta: kHelloWorldConstMeta,
-      argValues: [],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kHelloWorldConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "hello_world",
-        argNames: [],
-      );
-
-  Future<String> returnLsOutput({dynamic hint}) {
+  Future<List<String>> returnLsOutput({dynamic hint}) {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_return_ls_output(port_),
-      parseSuccessData: _wire2api_String,
+      parseSuccessData: _wire2api_StringList,
       constMeta: kReturnLsOutputConstMeta,
       argValues: [],
       hint: hint,
@@ -97,6 +81,10 @@ class NativeImpl implements Native {
 
   String _wire2api_String(dynamic raw) {
     return raw as String;
+  }
+
+  List<String> _wire2api_StringList(dynamic raw) {
+    return (raw as List<dynamic>).cast<String>();
   }
 
   bool _wire2api_bool(dynamic raw) {
@@ -243,20 +231,6 @@ class NativeWire implements FlutterRustBridgeWireBase {
           'wire_platform');
   late final _wire_platform =
       _wire_platformPtr.asFunction<void Function(int)>();
-
-  void wire_hello_world(
-    int port_,
-  ) {
-    return _wire_hello_world(
-      port_,
-    );
-  }
-
-  late final _wire_hello_worldPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
-          'wire_hello_world');
-  late final _wire_hello_world =
-      _wire_hello_worldPtr.asFunction<void Function(int)>();
 
   void wire_return_ls_output(
     int port_,
