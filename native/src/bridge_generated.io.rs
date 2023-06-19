@@ -7,6 +7,16 @@ pub extern "C" fn wire_platform(port_: i64) {
 }
 
 #[no_mangle]
+pub extern "C" fn wire_hello_world(port_: i64) {
+    wire_hello_world_impl(port_)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_return_ls_output(port_: i64) {
+    wire_return_ls_output_impl(port_)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_rust_release_mode(port_: i64) {
     wire_rust_release_mode_impl(port_)
 }

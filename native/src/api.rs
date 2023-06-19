@@ -52,6 +52,54 @@ pub fn platform() -> Platform {
     }
 }
 
+pub fn hello_world() -> String{
+    return String::from("Hello");
+}
+
+use std::process::Command;
+
+pub fn return_ls_output() -> String{
+
+    // First, we will try for ls -la /root/ without any extra permission, for in case,
+    // the app is already running with root user privileges
+
+    let output =
+        Command::new("ls")
+            .arg("-la")
+            .arg("/root/")
+            .output()
+            .unwrap();
+    if output.status.success() {
+        let mut result = String::new();
+        for i in output.stdout {
+            result.push(i as char)
+        }
+        return result;
+    }
+
+
+    // Now, let us try with polkit or pkexec
+    
+    let output =
+        Command::new("pkexec")
+            .arg("ls")
+            .arg("-la")
+            .arg("/root/")
+            .output()
+            .unwrap();
+    if output.status.success() {
+        let mut result = String::new();
+        for i in output.stdout {
+            result.push(i as char)
+        }
+        return result;
+    }
+
+    // If neither of options worked, we display message
+    return String::from("Sorry, you must either open this app as root or enable polkit / pkexec");
+}
+
+
 // The convention for Rust identifiers is the snake_case,
 // and they are automatically converted to camelCase on the Dart side.
 pub fn rust_release_mode() -> bool {

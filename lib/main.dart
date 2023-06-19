@@ -29,21 +29,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text("ls -la /root/", style: TextStyle(fontSize: 40.0)),
-            const Text('Run above cmd with Rust and print the output here'),
-          ],
+        body: FutureBuilder(
+          builder: (ctx, snapshot) {
+            // Checking if future is resolved or not
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If we got an error
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occurred',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+
+                // if we got our data
+              } else if (snapshot.hasData) {
+                // Extracting data from snapshot object
+                final data = snapshot.data as String;
+                return Center(
+                  child: Text(
+                    '$data',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+              }
+            }
+
+            // Displaying LoadingSpinner to indicate waiting state
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          future: api.returnLsOutput(),
         ),
-      ),
-    );
+      );
   }
 }
